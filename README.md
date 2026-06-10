@@ -1,6 +1,6 @@
 # Stock Sentiment Dashboard
 
-> Real-time NLP sentiment analysis for 15 major stocks — live headlines from Yahoo Finance RSS + Reddit r/stocks, scored with a finance-tuned VADER model, overlaid on price charts.
+> Real-time NLP sentiment analysis for 15 major stocks, live headlines from Yahoo Finance RSS + Reddit r/stocks, scored with a finance-tuned VADER model, overlaid on price charts.
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat&logo=python&logoColor=white)
 ![Dash](https://img.shields.io/badge/Plotly%20Dash-4.x-00B4D8?style=flat&logo=plotly&logoColor=white)
@@ -26,10 +26,10 @@
 Real-time headline stream from **Yahoo Finance RSS** and **Reddit r/stocks**, scored per headline and displayed with colour-coded sentiment badges (Bullish / Slightly Bullish / Neutral / Slightly Bearish / Bearish). Stock cards at the top show live price, % change, and a compound sentiment meter for each ticker.
 
 ### 📈 Sentiment vs Price
-Candlestick + volume chart with a **secondary sentiment overlay** — daily average VADER compound scores plotted alongside price history. Reports the Pearson correlation coefficient between sentiment and close price for the selected window (7d / 14d / 30d / 60d).
+Candlestick + volume chart with a **secondary sentiment overlay**, daily average VADER compound scores plotted alongside price history. Reports the Pearson correlation coefficient between sentiment and close price for the selected window (7d / 14d / 30d / 60d).
 
 ### 🎯 Earnings Watch
-Upcoming earnings dates for all tracked tickers, sorted by days until event. Includes a **pre-earnings sentiment bar chart** — shows whether the market is leaning bullish or bearish in the 30 days leading up to each report.
+Upcoming earnings dates for all tracked tickers, sorted by days until event. Includes a **pre-earnings sentiment bar chart**, shows whether the market is leaning bullish or bearish in the 30 days leading up to each report.
 
 ### 🏆 Sentiment Leaderboard
 24-hour sentiment ranking across all 15 stocks. Horizontal bar chart sorted by VADER compound score with headline counts. KPI tiles show market-wide sentiment, bullish/bearish stock counts, and total headlines processed.
@@ -53,12 +53,12 @@ Upcoming earnings dates for all tracked tickers, sorted by days until event. Inc
 | Layer       | Technology                                           |
 |-------------|------------------------------------------------------|
 | UI          | Plotly Dash 4.x + Dash Bootstrap Components          |
-| Charts      | Plotly 6.x — candlestick, bar, dual y-axis overlays  |
+| Charts      | Plotly 6.x, candlestick, bar, dual y-axis overlays  |
 | NLP         | VADER (`vaderSentiment`) + financial domain boosters |
 | Data        | Yahoo Finance RSS (`feedparser`) + Reddit JSON API   |
-| Prices      | `yfinance` — OHLCV history + live quotes + earnings  |
-| Storage     | SQLite (`data/sentiment.db`) — 60-day rolling window |
-| Scheduler   | APScheduler `BackgroundScheduler` — 5-min auto-refresh |
+| Prices      | `yfinance`, OHLCV history + live quotes + earnings  |
+| Storage     | SQLite (`data/sentiment.db`), 60-day rolling window |
+| Scheduler   | APScheduler `BackgroundScheduler`, 5-min auto-refresh |
 
 ---
 
@@ -90,7 +90,7 @@ python dashboard.py
 # Open http://localhost:8050
 ```
 
-The first run fetches ~15 tickers × 2 sources in the background — the UI renders immediately and populates as data arrives (30–60 seconds).
+The first run fetches ~15 tickers × 2 sources in the background, the UI renders immediately and populates as data arrives (30–60 seconds).
 
 ---
 
@@ -98,12 +98,12 @@ The first run fetches ~15 tickers × 2 sources in the background — the UI rend
 
 ```
 stock-sentiment-dashboard/
-├── dashboard.py        # Plotly Dash app — layout + all callbacks
+├── dashboard.py        # Plotly Dash app, layout + all callbacks
 ├── config.py           # Tickers, colours, thresholds, DB path
 ├── fetcher.py          # Yahoo Finance RSS + Reddit r/stocks scrapers
 ├── sentiment.py        # VADER scoring with financial boosters
-├── pricer.py           # yfinance — OHLCV, live quotes, earnings calendar
-├── store.py            # SQLite layer — upsert, query, prune old rows
+├── pricer.py           # yfinance, OHLCV, live quotes, earnings calendar
+├── store.py            # SQLite layer, upsert, query, prune old rows
 ├── scheduler.py        # APScheduler background refresh (every 5 min)
 ├── assets/
 │   └── dashboard.css   # Dark glassmorphism theme
@@ -153,7 +153,7 @@ requests>=2.31.0
 
 ## Related Projects
 
-- [IPL Analytics Dashboard](https://github.com/OzSpidey/ipl-analytics-dashboard) — Plotly Dash dashboard with 6 tabs of IPL cricket statistics
+- [IPL Analytics Dashboard](https://github.com/OzSpidey/ipl-analytics-dashboard), Plotly Dash dashboard with 6 tabs of IPL cricket statistics
 
 ---
 
