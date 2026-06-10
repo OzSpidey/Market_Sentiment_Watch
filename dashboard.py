@@ -24,7 +24,6 @@ PL = dict(
     font=dict(color=TEXT, family="Inter, system-ui, sans-serif"),
     margin=dict(l=50, r=30, t=44, b=40),
 )
-server = app.server
 
 # â”€â”€ UI helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 def card(children, extra=None):
@@ -271,7 +270,6 @@ app = dash.Dash(
     suppress_callback_exceptions=True,
 )
 server = app.server
-server = app.server
 
 
 def make_layout():
@@ -433,7 +431,6 @@ def render_tab(tab):
      Input("refresh-btn",     "n_clicks"),
      Input("feed-tickers",    "value")],
 )
-server = app.server
 def update_feed(_, n_clicks, tickers):
     ctx = callback_context
     if ctx.triggered and "refresh-btn" in ctx.triggered[0]["prop_id"]:
@@ -507,7 +504,6 @@ def update_feed(_, n_clicks, tickers):
      Input("chart-days",   "value"),
      Input("interval",     "n_intervals")],
 )
-server = app.server
 def update_chart(ticker, days, _):
     return fig_sentiment_price(ticker or "AAPL", days or 30)
 
@@ -518,7 +514,6 @@ def update_chart(ticker, days, _):
     [Input("earnings-ticker", "value"),
      Input("interval",        "n_intervals")],
 )
-server = app.server
 def update_earnings_chart(ticker, _):
     return fig_earnings_sentiment(ticker or "AMD")
 
@@ -528,7 +523,6 @@ def update_earnings_chart(ticker, _):
     Output("earnings-table", "children"),
     Input("interval", "n_intervals"),
 )
-server = app.server
 def update_earnings_table(_):
     cal = pricer.get_earnings_calendar(DEFAULT_TICKERS)
     if not cal:
@@ -563,7 +557,6 @@ def update_earnings_table(_):
      Output("most-active-list",  "children")],
     Input("interval", "n_intervals"),
 )
-server = app.server
 def update_leaderboard(_):
     summary = store.get_sentiment_summary()
 
