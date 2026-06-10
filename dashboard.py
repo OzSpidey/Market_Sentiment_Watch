@@ -298,7 +298,7 @@ def make_layout():
             dcc.Tab(label="ðŸ“¡  Live Feed",         value="feed",     style=TAB_S, selected_style=TAB_A),
             dcc.Tab(label="ðŸ“ˆ  Sentiment vs Price", value="chart",    style=TAB_S, selected_style=TAB_A),
             dcc.Tab(label="ðŸŽ¯  Earnings Watch",     value="earnings", style=TAB_S, selected_style=TAB_A),
-            dcc.Tab(label="ðŸ†  Leaderboard",        value="leader",   style=TAB_S, selected_style=TAB_A),
+            dcc.Tab(label="🏆  Leaderboard",        value="leader",   style=TAB_S, selected_style=TAB_A),
         ], style={"background": BG, "borderBottom": f"1px solid {BORDER}",
                   "padding": "0 32px"}),
 
