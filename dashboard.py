@@ -1,4 +1,4 @@
-"""
+﻿"""
 Real-Time Stock Sentiment Dashboard
 Run: python dashboard.py  ->  http://localhost:8050
 """
@@ -14,18 +14,19 @@ import store, scheduler, pricer, sentiment as sent
 from config import (DEFAULT_TICKERS, TICKER_NAMES, REFRESH_INTERVAL_S,
                     BG, CARD_BG, BORDER, TEXT, MUTED, ACCENT, GREEN, RED, YELLOW)
 
-# ── Start background data refresh ─────────────────────────────────────────────
+# â”€â”€ Start background data refresh â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 scheduler.start(DEFAULT_TICKERS)
 
-# ── Plotly base layout ─────────────────────────────────────────────────────────
+# â”€â”€ Plotly base layout â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 PL = dict(
     paper_bgcolor="rgba(0,0,0,0)",
     plot_bgcolor="#0d0d20",
     font=dict(color=TEXT, family="Inter, system-ui, sans-serif"),
     margin=dict(l=50, r=30, t=44, b=40),
 )
+server = app.server
 
-# ── UI helpers ─────────────────────────────────────────────────────────────────
+# â”€â”€ UI helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 def card(children, extra=None):
     s = {"background": CARD_BG, "border": f"1px solid {BORDER}",
          "borderRadius": "16px", "padding": "20px"}
@@ -61,7 +62,7 @@ def kpi(label, value, color=ACCENT):
 
 
 def ticker_dd(id_, value, multi=False):
-    opts = [{"label": f"{t}  —  {TICKER_NAMES.get(t, t)}", "value": t}
+    opts = [{"label": f"{t}  â€”  {TICKER_NAMES.get(t, t)}", "value": t}
             for t in DEFAULT_TICKERS]
     return dcc.Dropdown(id=id_, options=opts, value=value,
                         multi=multi, clearable=False,
@@ -69,9 +70,9 @@ def ticker_dd(id_, value, multi=False):
                         style={"marginBottom": "4px"})
 
 
-# ── Stock card (Live Feed tab) ─────────────────────────────────────────────────
+# â”€â”€ Stock card (Live Feed tab) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 def stock_card(ticker: str, quote: dict, sentiment_row: pd.Series | None):
-    price   = quote.get("price", "—")
+    price   = quote.get("price", "â€”")
     pct     = quote.get("pct_change", 0)
     chg     = quote.get("change", 0)
     p_color = GREEN if pct >= 0 else RED
@@ -92,7 +93,7 @@ def stock_card(ticker: str, quote: dict, sentiment_row: pd.Series | None):
     else:
         s_label, s_color = "Neutral",           MUTED
 
-    bar_pct = int((compound + 1) / 2 * 100)    # map -1..1 → 0..100%
+    bar_pct = int((compound + 1) / 2 * 100)    # map -1..1 â†’ 0..100%
 
     return html.Div([
         html.Div([
@@ -119,7 +120,7 @@ def stock_card(ticker: str, quote: dict, sentiment_row: pd.Series | None):
 
         html.Div([
             badge(s_label, s_color),
-            html.Span(f"  {compound:+.3f}  ·  {n} headlines",
+            html.Span(f"  {compound:+.3f}  Â·  {n} headlines",
                       style={"color": MUTED, "fontSize": "0.7rem", "marginLeft": "6px"}),
         ]),
     ], style={
@@ -130,13 +131,13 @@ def stock_card(ticker: str, quote: dict, sentiment_row: pd.Series | None):
     })
 
 
-# ── Charts ─────────────────────────────────────────────────────────────────────
+# â”€â”€ Charts â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 def fig_sentiment_price(ticker: str, days: int = 30):
     prices  = store.get_prices(ticker, days=days)
     daily_s = store.get_daily_sentiment(ticker, days=days)
 
     if prices.empty:
-        return go.Figure(layout={**PL, "title": {"text": "No price data yet — fetching…", "x": 0.5}})
+        return go.Figure(layout={**PL, "title": {"text": "No price data yet â€” fetchingâ€¦", "x": 0.5}})
 
     # Row 1 has secondary_y for sentiment overlay; row 2 is volume
     fig = make_subplots(
@@ -192,7 +193,7 @@ def fig_sentiment_price(ticker: str, days: int = 30):
     fig.update_layout(
         **PL,
         height=520,
-        title=dict(text=f"{ticker} — {name}  ·  {corr_label} sentiment/price correlation",
+        title=dict(text=f"{ticker} â€” {name}  Â·  {corr_label} sentiment/price correlation",
                    x=0.5),
         xaxis_rangeslider_visible=False,
         legend=dict(orientation="h", yanchor="bottom", y=1.02),
@@ -248,7 +249,7 @@ def fig_earnings_sentiment(ticker: str):
     fig.add_hline(y=0, line=dict(color="rgba(255,255,255,0.2)", dash="dash"))
     fig.update_layout(
         **PL, height=280,
-        title=dict(text=f"{ticker} — Daily Sentiment (30 days)", x=0.5),
+        title=dict(text=f"{ticker} â€” Daily Sentiment (30 days)", x=0.5),
         xaxis=dict(showgrid=False, tickangle=-45, type="category"),
         yaxis=dict(showgrid=True, gridcolor="rgba(255,255,255,0.05)",
                    zeroline=False),
@@ -256,7 +257,7 @@ def fig_earnings_sentiment(ticker: str):
     return fig
 
 
-# ── App layout ─────────────────────────────────────────────────────────────────
+# â”€â”€ App layout â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 TAB_S = {"padding": "10px 20px", "borderRadius": "8px 8px 0 0",
           "border": "none", "background": "transparent",
           "color": MUTED, "fontWeight": "600", "fontSize": "0.875rem"}
@@ -269,6 +270,8 @@ app = dash.Dash(
     title="Stock Sentiment Dashboard",
     suppress_callback_exceptions=True,
 )
+server = app.server
+server = app.server
 
 
 def make_layout():
@@ -279,8 +282,8 @@ def make_layout():
                     style={"fontSize": "1.8rem", "fontWeight": "900",
                            "margin": "0 0 4px", "color": TEXT,
                            "letterSpacing": "-0.02em"}),
-            html.P("Real-time NLP sentiment from Yahoo Finance + Reddit  ·  "
-                   "Powered by VADER  ·  Auto-refreshes every 5 minutes",
+            html.P("Real-time NLP sentiment from Yahoo Finance + Reddit  Â·  "
+                   "Powered by VADER  Â·  Auto-refreshes every 5 minutes",
                    style={"margin": 0, "color": MUTED, "fontSize": "0.82rem"}),
         ], style={
             "background": "linear-gradient(135deg,rgba(124,58,237,0.22),"
@@ -294,16 +297,16 @@ def make_layout():
 
         # Tabs
         dcc.Tabs(id="tabs", value="feed", children=[
-            dcc.Tab(label="📡  Live Feed",         value="feed",     style=TAB_S, selected_style=TAB_A),
-            dcc.Tab(label="📈  Sentiment vs Price", value="chart",    style=TAB_S, selected_style=TAB_A),
-            dcc.Tab(label="🎯  Earnings Watch",     value="earnings", style=TAB_S, selected_style=TAB_A),
-            dcc.Tab(label="🏆  Leaderboard",        value="leader",   style=TAB_S, selected_style=TAB_A),
+            dcc.Tab(label="ðŸ“¡  Live Feed",         value="feed",     style=TAB_S, selected_style=TAB_A),
+            dcc.Tab(label="ðŸ“ˆ  Sentiment vs Price", value="chart",    style=TAB_S, selected_style=TAB_A),
+            dcc.Tab(label="ðŸŽ¯  Earnings Watch",     value="earnings", style=TAB_S, selected_style=TAB_A),
+            dcc.Tab(label="ðŸ†  Leaderboard",        value="leader",   style=TAB_S, selected_style=TAB_A),
         ], style={"background": BG, "borderBottom": f"1px solid {BORDER}",
                   "padding": "0 32px"}),
 
         html.Div(id="tab-content", style={"padding": "24px 32px", "minHeight": "82vh"}),
 
-        html.Div("Stock Sentiment Dashboard  ·  Yahoo Finance + Reddit  ·  VADER NLP",
+        html.Div("Stock Sentiment Dashboard  Â·  Yahoo Finance + Reddit  Â·  VADER NLP",
                  style={"textAlign": "center", "color": MUTED, "fontSize": "0.72rem",
                         "padding": "14px", "borderTop": f"1px solid {BORDER}"}),
     ], style={"background": BG, "minHeight": "100vh",
@@ -313,7 +316,7 @@ def make_layout():
 app.layout = make_layout
 
 
-# ── Callbacks ──────────────────────────────────────────────────────────────────
+# â”€â”€ Callbacks â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.callback(Output("tab-content", "children"),
               Input("tabs", "value"))
 def render_tab(tab):
@@ -430,6 +433,7 @@ def render_tab(tab):
      Input("refresh-btn",     "n_clicks"),
      Input("feed-tickers",    "value")],
 )
+server = app.server
 def update_feed(_, n_clicks, tickers):
     ctx = callback_context
     if ctx.triggered and "refresh-btn" in ctx.triggered[0]["prop_id"]:
@@ -450,7 +454,7 @@ def update_feed(_, n_clicks, tickers):
         df = df[df["ticker"].isin(tickers)].head(100)
 
     if df.empty:
-        table = html.P("Fetching headlines… check back in a moment.",
+        table = html.P("Fetching headlinesâ€¦ check back in a moment.",
                        style={"color": MUTED, "padding": "20px 0"})
     else:
         rows = []
@@ -503,25 +507,28 @@ def update_feed(_, n_clicks, tickers):
      Input("chart-days",   "value"),
      Input("interval",     "n_intervals")],
 )
+server = app.server
 def update_chart(ticker, days, _):
     return fig_sentiment_price(ticker or "AAPL", days or 30)
 
 
-# Earnings — sentiment chart (fast: DB only)
+# Earnings â€” sentiment chart (fast: DB only)
 @app.callback(
     Output("earnings-sentiment-chart", "figure"),
     [Input("earnings-ticker", "value"),
      Input("interval",        "n_intervals")],
 )
+server = app.server
 def update_earnings_chart(ticker, _):
     return fig_earnings_sentiment(ticker or "AMD")
 
 
-# Earnings — calendar table (slow: 15 network calls, runs independently)
+# Earnings â€” calendar table (slow: 15 network calls, runs independently)
 @app.callback(
     Output("earnings-table", "children"),
     Input("interval", "n_intervals"),
 )
+server = app.server
 def update_earnings_table(_):
     cal = pricer.get_earnings_calendar(DEFAULT_TICKERS)
     if not cal:
@@ -556,11 +563,12 @@ def update_earnings_table(_):
      Output("most-active-list",  "children")],
     Input("interval", "n_intervals"),
 )
+server = app.server
 def update_leaderboard(_):
     summary = store.get_sentiment_summary()
 
     if summary.empty:
-        empty_fig = go.Figure(layout={**PL, "title": {"text": "Fetching data…", "x": 0.5}})
+        empty_fig = go.Figure(layout={**PL, "title": {"text": "Fetching dataâ€¦", "x": 0.5}})
         return empty_fig, [], []
 
     # KPI tiles
@@ -598,8 +606,9 @@ def update_leaderboard(_):
     return fig_leaderboard(summary), kpis, active_items
 
 
-# ── Entry point ────────────────────────────────────────────────────────────────
+# â”€â”€ Entry point â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 if __name__ == "__main__":
     print("\nStock Sentiment Dashboard")
     print("  -> http://localhost:8050\n")
-    app.run(debug=False, port=8050, host="0.0.0.0")
+    app.run(debug=False, port=int(os.environ.get("PORT", 8050)), host="0.0.0.0")
+
