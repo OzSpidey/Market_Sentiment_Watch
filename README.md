@@ -1,5 +1,8 @@
 # Stock Sentiment Dashboard
 
+
+**Live Demo:** https://market-sentiment-watch.onrender.com/
+
 > Real-time NLP sentiment analysis for 15 major stocks, live headlines from Yahoo Finance RSS + Reddit r/stocks, scored with a finance-tuned VADER model, overlaid on price charts.
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat&logo=python&logoColor=white)
